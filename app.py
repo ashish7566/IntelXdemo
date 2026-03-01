@@ -37,7 +37,7 @@ async def lookup(
     if not number:
         return JSONResponse(status_code=400, content={"error": "Number parameter is required"})
 
-    target_url = f"https://api.paanel.shop/numapi.php?action=api&key=hdsworie&number={number}"
+    target_url = f"https://api.vectorxo.online/lookup?key=@Cyber_X341Support&mobile={number}"
 
     async with httpx.AsyncClient() as client:
         try:
