@@ -6,7 +6,7 @@ import time
 app = FastAPI()
 
 # ===== Simple In-Memory Rate Limit =====
-RATE_LIMIT_SECONDS = 5
+RATE_LIMIT_SECONDS = 1
 ip_last_request = {}
 
 @app.middleware("http")
