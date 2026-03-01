@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, HTTPException, Request
+from fastapi import FastAPI, Query, Request
 from fastapi.responses import JSONResponse
 import httpx
 import time
@@ -18,7 +18,7 @@ async def rate_limit(request: Request, call_next):
     if last_time and (now - last_time) < RATE_LIMIT_SECONDS:
         return JSONResponse(
             status_code=429,
-            content={"error": "Ruk ja bhencho itne m kya unlimited request lega?? Paid lena h to bolo 300-400₹ @Cyber_XSupport."}
+            content={"error": "Slow down bro"}
         )
 
     ip_last_request[ip] = now
@@ -30,33 +30,35 @@ async def lookup(
     key: str = Query(None), 
     number: str = Query(None)
 ):
-    # Fast Validation
-    if key != "IntelDemo":
+
+    if key != "IntelX":
         return JSONResponse(status_code=403, content={"error": "Unauthorized: Invalid Key"})
 
     if not number:
         return JSONResponse(status_code=400, content={"error": "Number parameter is required"})
 
-    target_url = f"https://api.paanel.shop/numapi.php?action=api&key=sssintel&test3=&test3={number}"
+    target_url = f"https://api.paanel.shop/numapi.php?action=api&key=hdsworie&number={number}"
 
     async with httpx.AsyncClient() as client:
         try:
-            response = await client.get(target_url, timeout=10.0)
-            data = response.json()
+            response = await client.get(target_url, timeout=15.0)
 
-            # Fast Filtering
-            if data.get("success") and "result" in data:
-                res = data["result"]
-                return {
-                    "results": res.get("results", []),
-                    "search_time": res.get("search_time", ""),
-                    "status": res.get("status", "success")
-                }
-
-            return JSONResponse(status_code=404, content={"error": "No data found"})
+            # Try returning JSON directly
+            try:
+                return JSONResponse(
+                    status_code=response.status_code,
+                    content=response.json()
+                )
+            except:
+                # If not JSON, return raw text
+                return JSONResponse(
+                    status_code=response.status_code,
+                    content={"raw_response": response.text}
+                )
 
         except Exception as e:
             return JSONResponse(
                 status_code=500,
-                content={"error": "Fast API error", "details": str(e)}
-            )
+                content={"error": "API error", "details": str(e)}
+    )
+    
