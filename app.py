@@ -1,6 +1,5 @@
 from fastapi import FastAPI, Query, Request
-from fastapi.responses import JSONResponse
-import httpx
+from fastapi.responses import PlainTextResponse, JSONResponse
 import time
 
 app = FastAPI()
@@ -26,39 +25,22 @@ async def rate_limit(request: Request, call_next):
 
 # ===== API =====
 @app.get("/")
-async def lookup(
-    key: str = Query(None), 
-    number: str = Query(None)
-):
+async def lookup(key: str = Query(None), number: str = Query(None)):
 
     if key != "IntelX":
-        return JSONResponse(status_code=403, content={"error": "Unauthorized: Invalid Key"})
+        return JSONResponse(
+            status_code=403,
+            content={"error": "Unauthorized: Invalid Key"}
+        )
 
-    if not number:
-        return JSONResponse(status_code=400, content={"error": "Number parameter is required"})
+    return PlainTextResponse(
+"""Free mai kya lifetime ke liye loge abbb
+Free Trial Over
 
-    target_url = f"https://api.vectorxo.online/lookup?key=@Cyber_X341Support&mobile={number}"
+DM FOR Paid Access
+@Cyber_XSupport
 
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.get(target_url, timeout=15.0)
-
-            # Try returning JSON directly
-            try:
-                return JSONResponse(
-                    status_code=response.status_code,
-                    content=response.json()
-                )
-            except:
-                # If not JSON, return raw text
-                return JSONResponse(
-                    status_code=response.status_code,
-                    content={"raw_response": response.text}
-                )
-
-        except Exception as e:
-            return JSONResponse(
-                status_code=500,
-                content={"error": "API error", "details": str(e)}
-    )
-    
+For Free APIs join channel:
+https://t.me/+qsKh2hpGj0IwM2Q1
+"""
+                     )
